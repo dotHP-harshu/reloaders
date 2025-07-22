@@ -1,28 +1,33 @@
 {
-  "name": "reloaders",
+  "name": "@dothp/reloaders",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    "./BarLoaders": "./dist/BarLoaders.js",
+    "./DotLoaders": "./dist/DotLoaders.js",
+    "./FunLoaders": "./dist/FunLoaders.js",
+    "./MotionPathLoaders": "./dist/MotionPathLoaders.js",
+    "./OtherLoaders": "./dist/OtherLoaders.js",
+    "./ShapeLoaders": "./dist/ShapeLoaders.js",
+    "./SkeletonLoaders": "./dist/SkeletonLoaders.js",
+    "./Spinner": "./dist/Spinner.js",
+    "./TextLoaders": "./dist/TextLoaders.js"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "styled-components": "^6.1.19"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.30.1",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
-    "eslint": "^9.30.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
-    "vite": "^7.0.4"
+    "tsup": "^8.5.0"
   }
 }
