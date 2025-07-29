@@ -9,10 +9,10 @@
   "exports": {
     "./package.json": "./package.json",
     "./BarLoaders": "./dist/BarLoaders.js",
+    "./CubeLoaders": "./dist/CubeLoaders.js",
     "./DotLoaders": "./dist/DotLoaders.js",
     "./FunLoaders": "./dist/FunLoaders.js",
     "./MotionPathLoaders": "./dist/MotionPathLoaders.js",
-    "./OtherLoaders": "./dist/OtherLoaders.js",
     "./ShapeLoaders": "./dist/ShapeLoaders.js",
     "./SkeletonLoaders": "./dist/SkeletonLoaders.js",
     "./Spinner": "./dist/Spinner.js",

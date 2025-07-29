@@ -4,10 +4,10 @@ import { defineConfig } from "tsup";
 export default defineConfig({
   entry: [
     "src/BarLoaders.jsx",
+    "src/CubeLoaders.jsx",
     "src/DotLoaders.jsx",
     "src/FunLoaders.jsx",
     "src/MotionPathLoaders.jsx",
-    "src/OtherLoaders.jsx",
     "src/ShapeLoaders.jsx",
     "src/SkeletonLoaders.jsx",
     "src/Spinner.jsx",
