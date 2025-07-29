@@ -1181,7 +1181,7 @@ export {
   // PacmanLoader,
   HeartBeatAnimation,
   CoffeeCupSteam,
-  HourglassFlip,
+  // HourglassFlip,
   LoadingCat,
   LoaderRobot,
   InfinitySpinner,

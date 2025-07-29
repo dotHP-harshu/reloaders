@@ -283,22 +283,18 @@ const RippleSpinner = ({
 
 // 5. Enhanced Orbit with trailing effect
 const OrbitSpinner = ({
-  size = defaultProps.size,
-  color = defaultProps.color,
+  size = defaultProps.size, // Outer orbit size
+  centerSize = "30%", // Size of the center big dot
+  color = defaultProps.color, // Center color
+  dotColor = "#666", // Orbiting dot color
+  speed = defaultProps.speed,
+  glow = true,
   className = defaultProps.className,
   style = defaultProps.style,
-  speed = defaultProps.speed,
-  dotColor = "#666",
-  trailEffect = true,
-  dotCount = 6,
 }) => {
-  const orbitName = useMemo(() => generateAnimationName("orbit-rotate"), []);
-  const dotSpinName = useMemo(
-    () => generateAnimationName("dot-counter-rotate"),
-    []
-  );
-  const trailName = useMemo(() => generateAnimationName("trail-fade"), []);
-  const duration = getAnimationDuration(speed).orbit;
+  const orbitName = useMemo(() => `orbit-${Date.now()}`, []);
+
+  const duration = getAnimationDuration(speed).primary;
 
   return (
     <>
@@ -308,21 +304,13 @@ const OrbitSpinner = ({
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-        @keyframes ${dotSpinName} {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(-360deg); }
-        }
-        @keyframes ${trailName} {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.4; transform: scale(0.8); }
-        }
         `}
       </style>
+
       <div
         className={className}
         style={{
           position: "relative",
-          borderRadius: "50%",
           width: size,
           height: size,
           display: "flex",
@@ -333,22 +321,19 @@ const OrbitSpinner = ({
         aria-label="Loading..."
         role="status"
       >
-        {/* Center core */}
+        {/* Big central dot */}
         <div
           style={{
             position: "absolute",
             borderRadius: "50%",
-            width: "25%",
-            height: "25%",
+            width: centerSize,
+            height: centerSize,
             backgroundColor: color,
-            filter: `drop-shadow(0 0 6px ${color}50)`,
-            animation: trailEffect
-              ? `${trailName} 2s ease-in-out infinite`
-              : "none",
+            filter: glow ? `drop-shadow(0 0 12px ${color}80)` : "none",
           }}
         />
 
-        {/* Orbiting system */}
+        {/* Orbit container */}
         <div
           style={{
             position: "absolute",
@@ -356,34 +341,23 @@ const OrbitSpinner = ({
             height: "100%",
             borderRadius: "50%",
             animation: `${orbitName} ${duration} linear infinite`,
-            willChange: "transform",
+            transformOrigin: "center center",
           }}
         >
-          {[...Array(dotCount)].map((_, i) => (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                borderRadius: "50%",
-                width: "12%",
-                height: "12%",
-                backgroundColor: dotColor,
-                top: "5%",
-                left: "50%",
-                transform: `translateX(-50%) rotate(${
-                  (360 / dotCount) * i
-                }deg) translateY(${parseFloat(size) * 0.35}px)`,
-                transformOrigin: `50% ${parseFloat(size) * 0.45}px`,
-                animation: `${dotSpinName} ${duration} linear infinite${
-                  trailEffect
-                    ? `, ${trailName} 3s ease-in-out infinite ${i * 0.2}s`
-                    : ""
-                }`,
-                filter: `drop-shadow(0 0 3px ${dotColor}40)`,
-                willChange: "transform, opacity",
-              }}
-            />
-          ))}
+          {/* Small orbiting dot */}
+          <div
+            style={{
+              position: "absolute",
+              top: "0%",
+              left: "50%",
+              transform: "translateX(-50%)",
+              borderRadius: "50%",
+              width: "15%",
+              height: "15%",
+              backgroundColor: dotColor,
+              filter: glow ? `drop-shadow(0 0 8px ${dotColor}80)` : "none",
+            }}
+          />
         </div>
       </div>
     </>
@@ -556,72 +530,7 @@ const DashedRingLoader = ({
   );
 };
 
-// 8. Enhanced Pie Loader with smooth gradient fill
-const PieLoader = ({
-  size = defaultProps.size,
-  color = defaultProps.color,
-  className = defaultProps.className,
-  style = defaultProps.style,
-  speed = defaultProps.speed,
-  gradientEnd = null,
-  showPercentage = false,
-}) => {
-  const pieName = useMemo(() => generateAnimationName("pie-progress"), []);
-  const duration = getAnimationDuration(speed).primary;
-  const endColor = gradientEnd || `${color}80`;
-
-  return (
-    <>
-      <style>
-        {`
-        @keyframes ${pieName} {
-          0% {
-            background: conic-gradient(${color} 0deg, rgba(255,255,255,0.1) 0deg);
-          }
-          100% {
-            background: conic-gradient(${color} 360deg, rgba(255,255,255,0.1) 360deg);
-          }
-        }
-        `}
-      </style>
-      <div
-        className={className}
-        style={{
-          position: "relative",
-          borderRadius: "50%",
-          width: size,
-          height: size,
-          background: `conic-gradient(${color} 0deg, rgba(255,255,255,0.1) 0deg)`,
-          animation: `${pieName} ${parseFloat(duration) * 2}s linear infinite`,
-          filter: `drop-shadow(0 0 8px ${color}40)`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          willChange: "background",
-          ...style,
-        }}
-        aria-label="Loading..."
-        role="status"
-      >
-        {showPercentage && (
-          <div
-            style={{
-              position: "absolute",
-              color: color,
-              fontSize: `${parseFloat(size) * 0.2}px`,
-              fontWeight: "bold",
-              fontFamily: "system-ui, -apple-system, sans-serif",
-            }}
-          >
-            ...
-          </div>
-        )}
-      </div>
-    </>
-  );
-};
-
-// 9. Enhanced SVG Loader with morphing shapes
+// 8. Enhanced SVG Loader with morphing shapes
 const SVGRotateLoader = ({
   size = defaultProps.size,
   color = defaultProps.color,
@@ -707,7 +616,7 @@ const SVGRotateLoader = ({
   );
 };
 
-// New Bonus Spinner: DNA Helix Loader
+// 9. DNAHelixLoader
 const DNAHelixLoader = ({
   size = defaultProps.size,
   color = defaultProps.color,
@@ -785,7 +694,6 @@ export {
   OrbitSpinner,
   SolarSpinner,
   DashedRingLoader,
-  PieLoader,
   SVGRotateLoader,
   DNAHelixLoader, // New bonus spinner
 };

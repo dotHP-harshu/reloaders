@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 // Common default props for all preloaders
 const defaultProps = {
-  size: "64px", // For overall container size where applicable
+  size: "400px", // For overall container size where applicable
   color: "#3498db",
   className: "",
   style: {},
-  duration: "1.5s", // Common animation duration prop
+  speed: "normal", // Common animation duration prop
 };
 
 // Helper for generating unique animation names
@@ -14,15 +14,463 @@ let animationCounter = 0;
 const generateAnimationName = (prefix = "anim") =>
   `${prefix}-${animationCounter++}`;
 
-// 34. Enhanced Rainbow Spinner with gradient border and glow
+const getLoaderAnimationDuration = (speed) => {
+  const durations = {
+    slow: "2s",
+    normal: "1.5s",
+    fast: "1s",
+  };
+  return durations[speed] || durations.normal;
+};
+
+// 1. MorphingShapeLoader
+const MorphingShapeLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  secondaryColor = "#514b82",
+  accentColor = "#ffa516",
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(() => generateAnimationName("morph-shape"), []);
+  const duration = getLoaderAnimationDuration(speed);
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          33% {
+            border-radius: 0;
+            background: ${secondaryColor};
+            clip-path: polygon(0 0,100% 0,100% 100%,0 100%);
+          }
+          66% {
+            border-radius: 0;
+            background: ${accentColor};
+            clip-path: polygon(50% 0,50% 0,100% 100%,0 100%);
+          }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "1",
+          borderRadius: "50%",
+          background: color,
+          clipPath: "polygon(0 0,100% 0,100% 100%,0 100%)",
+          animation: `${animationName} ${duration} infinite cubic-bezier(0.3,1,0,1)`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 2. Rotating Diamond Loader
+const RotatingDiamondLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("rotate-diamond"),
+    []
+  );
+  const duration = getLoaderAnimationDuration(speed);
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          50% {
+            width: calc(${size} * 1.5);
+            height: calc(${size} * 1.5);
+            transform: rotate(180deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          height: size,
+          color,
+          background: `
+            conic-gradient(from  -45deg at top    ${parseFloat(size)/2}px left 50%, #0000, currentColor 1deg 90deg, #0000 91deg),
+            conic-gradient(from   45deg at right  ${parseFloat(size)/2}px top 50%, #0000, currentColor 1deg 90deg, #0000 91deg),
+            conic-gradient(from  135deg at bottom ${parseFloat(size)/2}px left 50%, #0000, currentColor 1deg 90deg, #0000 91deg),
+            conic-gradient(from -135deg at left   ${parseFloat(size)/2}px top 50%, #0000, currentColor 1deg 90deg, #0000 91deg)`,
+          animation: `${animationName} ${duration} infinite cubic-bezier(0.3,1,0,1)`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 3. Corner Squares Loader
+const CornerSquaresLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("corner-squares"),
+    []
+  );
+  const duration = getLoaderAnimationDuration(speed);
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          0% {
+            background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+          }
+          33% {
+            background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+            width: calc(${size} * 1.5);
+            height: calc(${size} * 1.5);
+          }
+          66% {
+            background-position: 100% 0, 100% 100%, 0 100%, 0 0;
+            width: calc(${size} * 1.5);
+            height: calc(${size} * 1.5);
+          }
+          100% {
+            background-position: 100% 0, 100% 100%, 0 100%, 0 0;
+          }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          height: size,
+          background: `
+            no-repeat linear-gradient(${color} 0 0),
+            no-repeat linear-gradient(${color} 0 0),
+            no-repeat linear-gradient(${color} 0 0),
+            no-repeat linear-gradient(${color} 0 0)`,
+          backgroundSize: `${parseFloat(size)/2}px ${parseFloat(size)/2}px`,
+          animation: `${animationName} ${duration} infinite cubic-bezier(0.3,1,0,1)`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+
+// 4. Rotating Bars Loader
+const RotatingBarsLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("rotating-bars"),
+    []
+  );
+  const duration = getLoaderAnimationDuration(speed);
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          33% {
+            inset: -10px;
+            transform: rotate(0deg);
+          }
+          66% {
+            inset: -10px;
+            transform: rotate(90deg);
+          }
+          100% {
+            inset: 0;
+            transform: rotate(90deg);
+          }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "1",
+          color,
+          position: "relative",
+          background: `
+            conic-gradient(from 134deg at top, currentColor 92deg, #0000 0) top,
+            conic-gradient(from -46deg at bottom, currentColor 92deg, #0000 0) bottom`,
+          backgroundSize: "100% 50%",
+          backgroundRepeat: "no-repeat",
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      >
+        <div
+          style={{
+            content: "",
+            position: "absolute",
+            inset: "0",
+            background: `
+              linear-gradient(45deg, currentColor ${parseFloat(size)/3 }px, #0000 0 calc(100% - ${parseFloat(size)/3 }px), currentColor 0),
+              linear-gradient(-45deg, currentColor ${parseFloat(size)/3 }px, #0000 0 calc(100% - ${parseFloat(size)/3 }px), currentColor 0)`,
+            animation: `${animationName} ${duration} infinite cubic-bezier(0.3,1,0,1)`,
+          }}
+        />
+      </div>
+    </>
+  );
+};
+
+// 5. Skewed Squares Loader
+const SkewedSquaresLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("skewed-squares"),
+    []
+  );
+  const duration = getLoaderAnimationDuration(speed);
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          66% {
+            transform: skewX(0deg);
+          }
+          80%, 100% {
+            transform: skewX(-45deg);
+          }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "1",
+          display: "grid",
+          animation: `${animationName} ${duration} infinite linear`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      >
+        <div
+          style={{
+            content: "",
+            gridArea: "1/1",
+            background: color,
+            clipPath: "polygon(0 0%, 100% 0, 100% 100%)",
+            animation: "inherit",
+            animationName: "l8-1",
+          }}
+        />
+        <div
+          style={{
+            content: "",
+            gridArea: "1/1",
+            background: color,
+            clipPath: "polygon(0 0%, 100% 0, 100% 100%)",
+            animation: "inherit",
+            animationName: "l8-1",
+            transform: "scale(-1)",
+          }}
+        />
+      </div>
+    </>
+  );
+};
+
+// 6. Pulsing Dots Loader
+const PulsingDotsLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("pulsing-dots"),
+    []
+  );
+  const duration = getLoaderAnimationDuration(speed);
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          33% {
+            inset: -10px;
+            transform: rotate(0deg);
+          }
+          66% {
+            inset: -10px;
+            transform: rotate(90deg);
+          }
+          100% {
+            inset: 0;
+            transform: rotate(90deg);
+          }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "1",
+          color,
+          position: "relative",
+          background:
+            `radial-gradient( ${parseFloat(size)/4}px, currentColor 94%, #0000)`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      >
+        <div
+          style={{
+            content: "",
+            position: "absolute",
+            inset: "0",
+            borderRadius: "50%",
+            background: `
+              radial-gradient(${
+                parseFloat(size) / 4
+              }px at bottom right, #0000 94%, currentColor) top left,
+              radial-gradient(${
+                parseFloat(size) / 4
+              }px at bottom left, #0000 94%, currentColor) top right,
+              radial-gradient(${
+                parseFloat(size) / 4
+              }px at top right, #0000 94%, currentColor) bottom left,
+              radial-gradient(${
+                parseFloat(size) / 4
+              }px at top left, #0000 94%, currentColor) bottom right`,
+            backgroundSize: `${parseFloat(size) / 2}px ${
+              parseFloat(size) / 2
+            }px`,
+            backgroundRepeat: "no-repeat",
+            animation: `${animationName} ${duration} infinite cubic-bezier(0.3,1,0,1)`,
+          }}
+        />
+      </div>
+    </>
+  );
+};
+
+
+// 7. Hexagon Spinner Loader
+const HexagonSpinnerLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("hexagon-spinner"),
+    []
+  );
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          33% {
+            inset: -8px;
+            transform: rotate(0deg);
+          }
+          66% {
+            inset: -8px;
+            transform: rotate(180deg);
+          }
+          100% {
+            inset: 0;
+            transform: rotate(180deg);
+          }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "1",
+          position: "relative",
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      >
+        <div
+          style={{
+            content: "",
+            position: "absolute",
+            inset: "0",
+            borderRadius: "50%",
+            background: `
+              conic-gradient(from 0deg, #0000, ${color} 1deg 120deg, #0000 121deg) top right,
+              conic-gradient(from 120deg, #0000, ${color} 1deg 120deg, #0000 121deg) bottom,
+              conic-gradient(from 240deg, #0000, ${color} 1deg 120deg, #0000 121deg) top left`,
+            backgroundSize: `${parseFloat(size) }px  ${parseFloat(size) }px `,
+            backgroundRepeat: "no-repeat",
+            animation: `${animationName} 2s infinite cubic-bezier(0.3,1,0,1)`,
+          }}
+        />
+      </div>
+    </>
+  );
+};
+
+
+// 8. Enhanced Rainbow Spinner with gradient border and glow
 const RainbowSpinner = ({
+  bgcolor = defaultProps.color,
   size = defaultProps.size,
   className = defaultProps.className,
   style = defaultProps.style,
-  duration = defaultProps.duration,
+  speed = defaultProps.speed,
 }) => {
   const spinAnimationName = generateAnimationName("rainbow-spin");
   const pulseAnimationName = generateAnimationName("rainbow-pulse");
+  const duration = getLoaderAnimationDuration(speed);
 
   return (
     <>
@@ -65,7 +513,7 @@ const RainbowSpinner = ({
           style={{
             width: `calc(${size} - 16px)`,
             height: `calc(${size} - 16px)`,
-            background: "rgba(255, 255, 255, 0.9)",
+            background: bgcolor,
             backdropFilter: "blur(10px)",
             borderRadius: "inherit",
             border: "1px solid rgba(255, 255, 255, 0.3)",
@@ -76,19 +524,20 @@ const RainbowSpinner = ({
   );
 };
 
-// 35. Enhanced Color-Fill Dots with bounce and trail effect
+// 9. Enhanced Color-Fill Dots with bounce and trail effect
 const ColorFillDots = ({
-  size = "15px",
+  size = defaultProps.size,
   color = defaultProps.color,
   secondColor = "#ff6b9d",
   className = defaultProps.className,
   style = defaultProps.style,
   dotCount = 3,
   gap = "8px",
-  duration = defaultProps.duration,
+  speed = defaultProps.speed,
 }) => {
   const bounceAnimationName = generateAnimationName("color-fill-bounce");
   const glowAnimationName = generateAnimationName("dot-glow");
+  const duration = getLoaderAnimationDuration(speed)
 
   return (
     <>
@@ -118,6 +567,7 @@ const ColorFillDots = ({
           alignItems: "center",
           justifyContent: "center",
           height: `calc(${size} + 40px)`,
+          width: "fit-content",
           ...style,
         }}
         aria-label="Loading..."
@@ -159,17 +609,18 @@ const ColorFillDots = ({
   );
 };
 
-// 36. Enhanced Shape Morphing with smooth transitions and color shifts
+// 10. Enhanced Shape Morphing with smooth transitions and color shifts
 const ShapeMorphing = ({
   size = defaultProps.size,
   color = defaultProps.color,
   secondColor = "#ff6b9d",
   className = defaultProps.className,
   style = defaultProps.style,
-  duration = defaultProps.duration,
+  speed = defaultProps.speed,
 }) => {
   const morphAnimationName = generateAnimationName("shape-morph-enhanced");
   const colorShiftAnimationName = generateAnimationName("morph-color-shift");
+  const duration = getLoaderAnimationDuration(speed)
 
   return (
     <>
@@ -228,17 +679,19 @@ const ShapeMorphing = ({
   );
 };
 
-// 37. Enhanced Geometric Shapes with 3D effect
+// 11. Enhanced Geometric Shapes with 3D effect
 const GeometricShapes = ({
   size = defaultProps.size,
   color = defaultProps.color,
   className = defaultProps.className,
+  secondColor= "#ff6b9d",
   style = defaultProps.style,
-  duration = defaultProps.duration,
+  speed = defaultProps.duration,
   shapeCount = 3,
 }) => {
   const orbitAnimationName = generateAnimationName("geo-orbit");
   const floatAnimationName = generateAnimationName("geo-float");
+  const duration = getLoaderAnimationDuration(speed)
 
   return (
     <>
@@ -288,9 +741,9 @@ const GeometricShapes = ({
             key={i}
             style={{
               position: "absolute",
-              width: `${parseFloat(size) / 6}px`,
-              height: `${parseFloat(size) / 6}px`,
-              background: `linear-gradient(135deg, ${color}, #ff6b9d)`,
+              width: `${parseFloat(size) / 1}px`,
+              height: `${parseFloat(size) / 1}px`,
+              background: `linear-gradient(135deg, ${color}, ${secondColor})`,
               borderRadius: i % 2 === 0 ? "50%" : "20%",
               boxShadow: `0 4px 16px ${color}60`,
               animation: `${orbitAnimationName} ${duration} linear infinite, 
@@ -309,17 +762,18 @@ const GeometricShapes = ({
   );
 };
 
-// 38. Enhanced Hexagon Loader with neon glow
+// 12. Enhanced Hexagon Loader with neon glow
 const HexagonLoader = ({
   size = defaultProps.size,
   color = defaultProps.color,
   secondColor = "#fff",
   className = defaultProps.className,
   style = defaultProps.style,
-  duration = defaultProps.duration,
+  speed = defaultProps.speed,
 }) => {
   const hexSpinAnimationName = generateAnimationName("hex-spin-enhanced");
   const hexPulseAnimationName = generateAnimationName("hex-pulse");
+  const duration = getLoaderAnimationDuration(speed)
 
   const hexRadius = parseFloat(size) / 2;
   const hexPoints = Array.from({ length: 6 }, (_, i) => {
@@ -391,13 +845,13 @@ const HexagonLoader = ({
   );
 };
 
-// 39. Enhanced Triangle Bounce with elastic effect
+// 13. Enhanced Triangle Bounce with elastic effect
 const TriangleBounce = ({
   size = defaultProps.size,
   color = defaultProps.color,
   className = defaultProps.className,
   style = defaultProps.style,
-  duration = defaultProps.duration,
+  speed = defaultProps.speed,
   triangleCount = 3,
   gap = "10px",
 }) => {
@@ -405,6 +859,7 @@ const TriangleBounce = ({
     "triangle-bounce-enhanced"
   );
   const triangleGlowAnimationName = generateAnimationName("triangle-glow");
+  const duration = getLoaderAnimationDuration(speed)
 
   return (
     <>
@@ -416,17 +871,17 @@ const TriangleBounce = ({
           }
           25% { 
             transform: translateY(-${
-              parseFloat(size) * 0.8
+              parseFloat(size)/3 * 0.8
             }px) scale(1.2) rotateZ(5deg); 
           }
           50% { 
             transform: translateY(-${
-              parseFloat(size) * 1.2
+              parseFloat(size)/3 * 1.2
             }px) scale(0.9) rotateZ(0deg); 
           }
           75% { 
             transform: translateY(-${
-              parseFloat(size) * 0.4
+              parseFloat(size)/3 * 0.4
             }px) scale(1.1) rotateZ(-5deg); 
           }
         }
@@ -442,7 +897,8 @@ const TriangleBounce = ({
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "center",
-          height: `calc(${size} * 2.5)`,
+          height: `calc(${size})`,
+          width: "fit-content",
           ...style,
         }}
         aria-label="Loading..."
@@ -451,8 +907,8 @@ const TriangleBounce = ({
         {[...Array(triangleCount)].map((_, i) => (
           <svg
             key={i}
-            width={size}
-            height={size}
+            width={parseFloat(size)/3}
+            height={parseFloat(size)/3}
             viewBox={`0 0 ${parseFloat(size)} ${parseFloat(size)}`}
             style={{
               margin: `0 ${gap}`,
@@ -490,17 +946,18 @@ const TriangleBounce = ({
   );
 };
 
-// 40. Enhanced Polygon Rotation with morphing sides
+// 14. Enhanced Polygon Rotation with morphing sides
 const PolygonRotation = ({
   size = defaultProps.size,
   color = defaultProps.color,
   className = defaultProps.className,
   style = defaultProps.style,
-  duration = defaultProps.duration,
+  speed = defaultProps.speed,
   sides = 4,
 }) => {
   const polygonAnimationName = generateAnimationName("polygon-enhanced");
   const polygonGlowAnimationName = generateAnimationName("polygon-glow");
+  const duration = getLoaderAnimationDuration(speed)
 
   // Function to generate polygon points
   const getPolygonPoints = (numSides, radius, phase = 0) => {
@@ -585,115 +1042,17 @@ const PolygonRotation = ({
   );
 };
 
-// 41. Enhanced Color-Shifting Background with gradient waves
-const ColorShiftingBackground = ({
-  width = "100%",
-  height = "100px",
-  className = defaultProps.className,
-  style = defaultProps.style,
-  duration = "5s",
-}) => {
-  const gradientWaveAnimationName = generateAnimationName("gradient-wave");
-  const textFloatAnimationName = generateAnimationName("text-float");
 
-  return (
-    <>
-      <style>
-        {`
-        @keyframes ${gradientWaveAnimationName} {
-          0% { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            background-size: 200% 200%;
-            background-position: 0% 50%;
-          }
-          25% { 
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            background-size: 200% 200%;
-            background-position: 100% 50%;
-          }
-          50% { 
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            background-size: 200% 200%;
-            background-position: 50% 0%;
-          }
-          75% { 
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            background-size: 200% 200%;
-            background-position: 50% 100%;
-          }
-          100% { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            background-size: 200% 200%;
-            background-position: 0% 50%;
-          }
-        }
-        @keyframes ${textFloatAnimationName} {
-          0%, 100% { 
-            transform: translateY(0px); 
-            opacity: 0.9;
-          }
-          50% { 
-            transform: translateY(-5px); 
-            opacity: 1;
-          }
-        }
-        `}
-      </style>
-      <div
-        className={className}
-        style={{
-          width: width,
-          height: height,
-          animation: `${gradientWaveAnimationName} ${duration} ease-in-out infinite`,
-          borderRadius: "16px",
-          position: "relative",
-          overflow: "hidden",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-          ...style,
-        }}
-        aria-label="Loading..."
-        role="status"
-      >
-        {/* Glassmorphism overlay */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(255, 255, 255, 0.2)",
-            borderRadius: "16px",
-          }}
-        />
-
-        {/* Loading text with animation */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%",
-            color: "white",
-            fontSize: "1.2em",
-            fontWeight: "600",
-            textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
-            position: "relative",
-            zIndex: 1,
-            animation: `${textFloatAnimationName} 2s ease-in-out infinite`,
-          }}
-        >
-          Loading...
-        </div>
-      </div>
-    </>
-  );
-};
 
 // Export all enhanced color & shape components
 export {
+  MorphingShapeLoader,
+  RotatingDiamondLoader,
+  CornerSquaresLoader,
+  RotatingBarsLoader,
+  SkewedSquaresLoader,
+  PulsingDotsLoader,
+  HexagonSpinnerLoader,
   RainbowSpinner,
   ColorFillDots,
   ShapeMorphing,
@@ -701,5 +1060,4 @@ export {
   HexagonLoader,
   TriangleBounce,
   PolygonRotation,
-  ColorShiftingBackground,
 };

@@ -44,6 +44,7 @@ const ThreeBouncingDots = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          width:"fit-content",
           height: `calc(${size} * 2.5)`,
           gap,
           ...style,
@@ -108,6 +109,7 @@ const DotsFading = ({
         style={{
           display: "flex",
           alignItems: "center",
+          width: "fit-content",
           justifyContent: "center",
           gap,
           ...style,
@@ -164,6 +166,7 @@ const DotWave = ({
         style={{
           display: "flex",
           alignItems: "flex-end",
+          width: "fit-content",
           justifyContent: "center",
           height: `calc(${size} * 2.8)`,
           gap,
@@ -297,6 +300,7 @@ const PulseDots = ({
         style={{
           display: "flex",
           alignItems: "center",
+          width: "fit-content",
           justifyContent: "center",
           gap,
           ...style,
@@ -364,6 +368,7 @@ const DotDrop = ({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          width: "fit-content",
           height: `calc(${size} * 4)`,
           gap,
           ...style,
@@ -422,6 +427,7 @@ const TypingDots = ({
         style={{
           display: "flex",
           alignItems: "flex-end",
+          width: "fit-content",
           justifyContent: "center",
           height: `calc(${size} * 2)`,
           gap,
@@ -486,6 +492,7 @@ const SequentialDotReveal = ({
         className={className}
         style={{
           display: "flex",
+          width: "fit-content",
           alignItems: "center",
           justifyContent: "center",
           gap,
@@ -515,76 +522,6 @@ const SequentialDotReveal = ({
 };
 
 // New: DNA Helix Dots
-const DNAHelixDots = ({
-  size = "8px",
-  color = defaultProps.color,
-  className = defaultProps.className,
-  style = defaultProps.style,
-  dotCount = 6,
-}) => {
-  const helixAnimationName = generateAnimationName("dna-helix");
-  return (
-    <>
-      <style>
-        {`
-        @keyframes ${helixAnimationName} {
-          0% { 
-            transform: translateX(0) translateY(0) scale(1);
-            opacity: 1;
-          }
-          25% { 
-            transform: translateX(15px) translateY(-10px) scale(0.8);
-            opacity: 0.7;
-          }
-          50% { 
-            transform: translateX(0) translateY(-20px) scale(1);
-            opacity: 1;
-          }
-          75% { 
-            transform: translateX(-15px) translateY(-10px) scale(0.8);
-            opacity: 0.7;
-          }
-          100% { 
-            transform: translateX(0) translateY(0) scale(1);
-            opacity: 1;
-          }
-        }
-        `}
-      </style>
-      <div
-        className={className}
-        style={{
-          position: "relative",
-          width: "40px",
-          height: "60px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-around",
-          alignItems: "center",
-          ...style,
-        }}
-        aria-label="Loading..."
-        role="status"
-      >
-        {[...Array(dotCount)].map((_, i) => (
-          <div
-            key={i}
-            style={{
-              width: size,
-              height: size,
-              background: `linear-gradient(45deg, ${color}, ${color}dd)`,
-              borderRadius: "50%",
-              animation: `${helixAnimationName} 2s infinite ease-in-out`,
-              animationDelay: `${i * 0.2}s`,
-              willChange: "transform, opacity",
-              boxShadow: `0 0 4px ${color}50`,
-            }}
-          />
-        ))}
-      </div>
-    </>
-  );
-};
 
 // New: Orbit Dots
 const OrbitDots = ({
@@ -685,6 +622,5 @@ export {
   DotDrop,
   TypingDots,
   SequentialDotReveal,
-  DNAHelixDots,
   OrbitDots,
 };

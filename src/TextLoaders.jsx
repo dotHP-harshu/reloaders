@@ -536,74 +536,14 @@ const ScrambledLettersLoader = ({
   );
 };
 
-// 8. Progressive Word Reveal
-const ProgressiveWordLoader = ({
-  wordList = ["Loading", "Fetching", "Finalizing", "Complete"],
-  color = defaultProps.color,
-  size = defaultProps.size,
-  className = defaultProps.className,
-  style = defaultProps.style,
-  speed = defaultProps.speed, // Controls fade duration
-  revealInterval = 1000, // Time between words
-}) => {
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const fadeAnimationName = useMemo(
-    () => generateAnimationName("word-fade"),
-    []
-  );
-  const duration = getAnimationDuration(speed).text;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWordIndex((prevIndex) => (prevIndex + 1) % wordList.length);
-    }, revealInterval);
-
-    return () => clearInterval(interval);
-  }, [wordList, revealInterval]);
-
-  return (
-    <>
-      <style>
-        {`
-        @keyframes ${fadeAnimationName} {
-          0% { opacity: 0; transform: translateY(10px); }
-          20% { opacity: 1; transform: translateY(0); }
-          80% { opacity: 1; transform: translateY(0); }
-          100% { opacity: 0; transform: translateY(-10px); }
-        }
-        `}
-      </style>
-      <span
-        className={className}
-        style={{
-          color,
-          fontSize: size,
-          display: "inline-block",
-          minWidth: "8em", // Ensure consistent width for smoother transitions
-          textAlign: "center",
-          animation: `${fadeAnimationName} ${duration} ease-in-out forwards`,
-          animationPlayState: "running", // Ensure animation plays on mount
-          willChange: "opacity, transform",
-          ...style,
-        }}
-        aria-live="polite"
-        aria-label={wordList[currentWordIndex]}
-        role="status"
-      >
-        {wordList[currentWordIndex]}
-      </span>
-    </>
-  );
-};
-
-// 9. Color Cycle Text
+// 8. Color Cycle Text
 const ColorCycleTextLoader = ({
   text = defaultProps.text,
   size = defaultProps.size,
   className = defaultProps.className,
   style = defaultProps.style,
   speed = defaultProps.speed,
-  colors = ["#e74c3c", "#3498db", "#2ecc71", "#f1c40f", "#9b59b6"], // Default color cycle
+  colors = ["#e74c3c", "#3498db", "#2ecc71", "#f1c40f", "#9b59b6", "#fff"], // Default color cycle
 }) => {
   const colorAnimationName = useMemo(
     () => generateAnimationName("color-cycle"),
@@ -633,7 +573,6 @@ const ColorCycleTextLoader = ({
         className={className}
         style={{
           fontSize: size,
-          fontWeight: "bold",
           display: "inline-block",
           animation: `${colorAnimationName} ${duration} linear infinite`,
           willChange: "color",
@@ -649,7 +588,7 @@ const ColorCycleTextLoader = ({
   );
 };
 
-// 10. Blinking Text
+// 9. Blinking Text
 const BlinkingTextLoader = ({
   text = defaultProps.text,
   color = defaultProps.color,
@@ -708,6 +647,150 @@ const BlinkingTextLoader = ({
   );
 };
 
+// 10. Text Trail Loader
+const TextTrailLoader = ({
+  text = defaultProps.text,
+  size = defaultProps.size,
+  color = defaultProps.color,
+  trailColor = defaultProps.trailColor,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useRef(generateAnimationName("trail-fade")).current;
+  const duration = getAnimationDuration(speed).primary;
+
+  useEffect(() => {
+    const styleTag = document.createElement("style");
+    styleTag.innerHTML = `
+      @keyframes ${animationName} {
+        0% { opacity: 0.2; transform: translateY(6px); color: ${trailColor}; }
+        50% { opacity: 1; transform: translateY(0); color: ${color}; }
+        100% { opacity: 0.2; transform: translateY(6px); color: ${trailColor}; }
+      }
+    `;
+    document.head.appendChild(styleTag);
+    return () => document.head.removeChild(styleTag);
+  }, [animationName, color, trailColor]);
+
+  return (
+    <div
+      className={className}
+      style={{
+        fontSize: size,
+        fontFamily: "monospace",
+        display: "inline-block",
+        whiteSpace: "pre",
+        ...style,
+      }}
+      aria-live="polite"
+      aria-label={text}
+      role="status"
+    >
+      {text.split("").map((char, i) => (
+        <span
+          key={i}
+          style={{
+            display: "inline-block",
+            animation: `${animationName} ${duration} ease-in-out infinite`,
+            animationDelay: `${i * 0.12}s`,
+            willChange: "opacity, transform, color",
+          }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+// 11. Typing Reveal Loader
+const TypingRevealLoader = ({
+  text = defaultProps.text,
+  size = defaultProps.size,
+  color = defaultProps.color,
+  speed = "fast",
+  className = defaultProps.className,
+  style = defaultProps.style
+}) => {
+  const [displayed, setDisplayed] = useState("");
+  const duration = speed === "slow" ? 400 : speed === "normal" ? 200 : speed === "fast" ? 100 : 0 ;
+
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayed(text.slice(0, i + 1));
+      i++;
+      if (i >= text.length) i = 0; // loop
+    }, duration);
+    return () => clearInterval(interval);
+  }, [text, duration]);
+
+  return (
+    <span style={{ fontSize: size, fontFamily: "monospace", color , ...style}} className={className}>
+      {displayed}
+      <span style={{ borderRight: `2px solid ${color}`, marginLeft: "2px" }} />
+    </span>
+  );
+};
+
+// 12. Flip Text Loader
+const FlipTextLoader = ({
+  text = defaultProps.text,
+  color = defaultProps.color,
+  size = defaultProps.size,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useRef(`flip-${Date.now()}`).current;
+  const duration = getAnimationDuration(speed).primary;
+
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes ${animationName} {
+        0% { transform: rotateX(0); }
+        50% { transform: rotateX(180deg); }
+        100% { transform: rotateX(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => style.remove();
+  }, [animationName]);
+
+  return (
+    <div
+    className={className}
+      style={{
+        fontSize: size,
+        color,
+        fontFamily: "monospace",
+        display: "inline-block",
+        ...style
+      }}
+    >
+      {text.split("").map((char, i) => (
+        <span
+          key={i}
+          style={{
+            display: "inline-block",
+            animation: `${animationName} ${duration} linear infinite`,
+            animationDelay: `${i * 0.1}s`,
+            transformOrigin: "50% 50%",
+            perspective: "400px",
+          }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+
+
+
 export {
   TypingDotsLoader,
   TypewriterLoader,
@@ -716,7 +799,9 @@ export {
   TextWaveLoader,
   GlitchTextLoader,
   ScrambledLettersLoader,
-  ProgressiveWordLoader,
   ColorCycleTextLoader,
   BlinkingTextLoader,
+  TextTrailLoader,
+  TypingRevealLoader,
+  FlipTextLoader,
 };

@@ -546,7 +546,6 @@ const LissajousCurveLoader = ({
           alignItems: "center",
           backgroundColor,
           borderRadius: "50%",
-          overflow: "hidden",
           ...style,
         }}
         aria-label="Loading content..."

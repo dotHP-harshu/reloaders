@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 // Enhanced Defaults with modern color palette
 const defaultProps = {
@@ -6,19 +6,459 @@ const defaultProps = {
   color: "#6366f1", // Modern indigo
   className: "",
   style: {},
-  barHeight: "8px",
-  barWidth: "8px",
   rounded: true,
+  speed: "1s",
 };
 
 let animationCounter = 0;
 const generateAnimationName = (prefix = "anim") =>
   `${prefix}-${animationCounter++}`;
 
-// 1. Enhanced Progress Bar with gradient and glow
-export const BasicProgressBar = ({
+// 1. Pulsing Bars Loader
+const PulsingBarsLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed
+}) => {
+  const animationName = useMemo(() => generateAnimationName("pulse-bars"), []);
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          0%  {background-size: 20% 100%,20% 100%,20% 100%}
+          33% {background-size: 20% 10% ,20% 100%,20% 100%}
+          50% {background-size: 20% 100%,20% 10% ,20% 100%}
+          66% {background-size: 20% 100%,20% 100%,20% 10% }
+          100%{background-size: 20% 100%,20% 100%,20% 100%}
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "1",
+          background: `
+            no-repeat linear-gradient(${color} 0 0) 0%   50%,
+            no-repeat linear-gradient(${color} 0 0) 50%  50%,
+            no-repeat linear-gradient(${color} 0 0) 100% 50%`,
+          backgroundSize: "20% 100%",
+          animation: `${animationName} ${speed} infinite linear`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 2. Rising Bars Loader
+const RisingBarsLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(() => generateAnimationName("rising-bars"), []);
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          0%  {background-size: 20% 100%,20% 100%,20% 100%}
+          20% {background-size: 20% 60% ,20% 100%,20% 100%}
+          40% {background-size: 20% 80% ,20% 60% ,20% 100%}
+          60% {background-size: 20% 100%,20% 80% ,20% 60% }
+          80% {background-size: 20% 100%,20% 100%,20% 80% }
+          100%{background-size: 20% 100%,20% 100%,20% 100%}
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "1",
+          background: `
+            no-repeat linear-gradient(${color} 0 0) 0%   100%,
+            no-repeat linear-gradient(${color} 0 0) 50%  100%,
+            no-repeat linear-gradient(${color} 0 0) 100% 100%`,
+          backgroundSize: "20% 100%",
+          animation: `${animationName} ${speed} infinite linear`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 3. Sliding Gradient Bars
+const SlidingGradientBars = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("sliding-gradient"),
+    []
+  );
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          100% {background-position: left top,center top,right top }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "1",
+          background: `
+            linear-gradient(${color}00 calc(1*100%/6),${color} 0 calc(3*100%/6),${color}00 0) left   bottom,
+            linear-gradient(${color}00 calc(2*100%/6),${color} 0 calc(4*100%/6),${color}00 0) center bottom,
+            linear-gradient(${color}00 calc(3*100%/6),${color} 0 calc(5*100%/6),${color}00 0) right  bottom`,
+          backgroundSize: "20% 600%",
+          backgroundRepeat: "no-repeat",
+          animation: `${animationName} ${speed} infinite linear`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 4. Moving Center Bars
+const MovingCenterBars = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("moving-center"),
+    []
+  );
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          33%  {background-position: 0% 50%,50% 100%,100% 100%}
+          50%  {background-position: 0%  0%,50%  50%,100% 100%}
+          66%  {background-position: 0%  0%,50%   0%,100%  50%}
+          100% {background-position: 0%  0%,50%   0%,100%   0%}
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "1",
+          background: `
+            no-repeat linear-gradient(${color} calc(50% - 10px),${color}00 0 calc(50% + 10px),${color} 0) 0%   100%,
+            no-repeat linear-gradient(${color} calc(50% - 10px),${color}00 0 calc(50% + 10px),${color} 0) 50%  100%,
+            no-repeat linear-gradient(${color} calc(50% - 10px),${color}00 0 calc(50% + 10px),${color} 0) 100% 100%`,
+          backgroundSize: "20% calc(200% + 20px)",
+          animation: `${animationName} ${speed} infinite linear`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 5. Alternating Bars Loader
+const AlternatingBarsLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("alternating-bars"),
+    []
+  );
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          20% {background-position: 0% 50% ,50% 100%,100% 100%}
+          40% {background-position: 0% 0%  ,50% 50% ,100% 100%}
+          60% {background-position: 0% 100%,50% 0%  ,100% 50% }
+          80% {background-position: 0% 100%,50% 100%,100% 0%  }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "0.75",
+          background: `
+            no-repeat linear-gradient(${color} 0 0) 0%   100%,
+            no-repeat linear-gradient(${color} 0 0) 50%  100%,
+            no-repeat linear-gradient(${color} 0 0) 100% 100%`,
+          backgroundSize: "20% 65%",
+          animation: `${animationName} ${speed} infinite linear`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 6. Vertical Wave Bars
+const VerticalWaveBars = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("vertical-wave"),
+    []
+  );
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          20% {background-position: 0% 0%  ,50% 50% ,100% 50% }
+          40% {background-position: 0% 100%,50% 0%  ,100% 50% }
+          60% {background-position: 0% 50% ,50% 100%,100% 0%  }
+          80% {background-position: 0% 50% ,50% 50% ,100% 100%}
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "0.75",
+          background: `
+            no-repeat linear-gradient(${color} 0 0) 0%   50%,
+            no-repeat linear-gradient(${color} 0 0) 50%  50%,
+            no-repeat linear-gradient(${color} 0 0) 100% 50%`,
+          backgroundSize: "20% 50%",
+          animation: `${animationName} ${speed} infinite linear`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 7. Size Morphing Bars
+const SizeMorphingBars = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(() => generateAnimationName("size-morph"), []);
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          0%  {background-size: 20% 50% ,20% 50% ,20% 50% }
+          20% {background-size: 20% 20% ,20% 50% ,20% 50% }
+          40% {background-size: 20% 100%,20% 20% ,20% 50% }
+          60% {background-size: 20% 50% ,20% 100%,20% 20% }
+          80% {background-size: 20% 50% ,20% 50% ,20% 100%}
+          100%{background-size: 20% 50% ,20% 50% ,20% 50% }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "0.75",
+          background: `
+            no-repeat linear-gradient(${color} 0 0) 0%   50%,
+            no-repeat linear-gradient(${color} 0 0) 50%  50%,
+            no-repeat linear-gradient(${color} 0 0) 100% 50%`,
+          backgroundSize: "20% 50%",
+          animation: `${animationName} ${speed} infinite linear alternate`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 8. Sequential Bars Loader
+const SequentialBarsLoader = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("sequential-bars"),
+    []
+  );
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          16.67% {background-position: 0% 0%  ,50% 100%,100% 100%}
+          33.33% {background-position: 0% 0%  ,50% 0%  ,100% 100%}
+          50%    {background-position: 0% 0%  ,50% 0%  ,100% 0%  }
+          66.67% {background-position: 0% 100%,50% 0%  ,100% 0%  }
+          83.33% {background-position: 0% 100%,50% 100%,100% 0%  }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "0.75",
+          background: `
+            no-repeat linear-gradient(${color} 0 0) 0%   100%,
+            no-repeat linear-gradient(${color} 0 0) 50%  100%,
+            no-repeat linear-gradient(${color} 0 0) 100% 100%`,
+          backgroundSize: "20% 65%",
+          animation: `${animationName} ${speed} infinite linear`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 9. Cross Pattern Bars
+const CrossPatternBars = ({
+  size = defaultProps.size,
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("cross-pattern"),
+    []
+  );
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          33% {background-position: 0% 0%  ,50% 100%,100% 0%  }
+          66% {background-position: 0% 100%,50% 0%  ,100% 100%}
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          width: size,
+          aspectRatio: "0.75",
+          background: `
+            no-repeat linear-gradient(${color} 0 0) 0%   50%,
+            no-repeat linear-gradient(${color} 0 0) 50%  50%,
+            no-repeat linear-gradient(${color} 0 0) 100% 50%`,
+          backgroundSize: "20% 60%",
+          animation: `${animationName} ${speed} infinite`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 10. Horizontal Stripes Loader
+const HorizontalStripesLoader = ({
+  size = "45px",
+  color = defaultProps.color,
+  className = defaultProps.className,
+  style = defaultProps.style,
+  speed = defaultProps.speed,
+}) => {
+  const animationName = useMemo(
+    () => generateAnimationName("horizontal-stripes"),
+    []
+  );
+
+  return (
+    <>
+      <style>
+        {`
+        @keyframes ${animationName} {
+          33%  {background-position: 0   0   ,100% 100%}
+          66%  {background-position: 0   100%,100% 0   }
+          100% {background-position: 50% 100%,50%  0   }
+        }
+        `}
+      </style>
+      <div
+        className={className}
+        style={{
+          height: size,
+          aspectRatio: "1.2",
+          background: `
+            no-repeat repeating-linear-gradient(90deg,${color} 0 20%,${color}00 0 40%) 50% 0,
+            no-repeat repeating-linear-gradient(90deg,${color} 0 20%,${color}00 0 40%) 50% 100%`,
+          backgroundSize: "calc(500%/6) 50%",
+          animation: `${animationName} ${speed} infinite linear`,
+          ...style,
+        }}
+        aria-label="Loading"
+        role="status"
+      />
+    </>
+  );
+};
+
+// 11. Enhanced Progress Bar with gradient and glow
+const BasicProgressBar = ({
   width = "100%",
-  height = defaultProps.barHeight,
+  height = defaultProps.size,
   color = defaultProps.color,
   className = "",
   style = {},
@@ -82,10 +522,10 @@ export const BasicProgressBar = ({
   );
 };
 
-// 2. Enhanced Striped Loader with 3D effect
-export const StripedLoaderBar = ({
+// 12. Enhanced Striped Loader with 3D effect
+const StripedLoaderBar = ({
   width = "100%",
-  height = defaultProps.barHeight,
+  height = defaultProps.size,
   color = defaultProps.color,
   className = "",
   style = {},
@@ -138,10 +578,10 @@ export const StripedLoaderBar = ({
   );
 };
 
-// 3. Enhanced Indeterminate Progress with shimmer effect
-export const IndeterminateProgressBar = ({
+// 13. Enhanced Indeterminate Progress with shimmer effect
+const IndeterminateProgressBar = ({
   width = "100%",
-  height = defaultProps.barHeight,
+  height = defaultProps.size,
   color = defaultProps.color,
   className = "",
   style = {},
@@ -213,10 +653,10 @@ export const IndeterminateProgressBar = ({
   );
 };
 
-// 4. Enhanced Dual Bar with synchronized wave motion
-export const DualBarLoader = ({
+// 14. Enhanced Dual Bar with synchronized wave motion
+const DualBarLoader = ({
   width = "100%",
-  height = defaultProps.barHeight,
+  height = defaultProps.size,
   color = defaultProps.color,
   className = "",
   style = {},
@@ -301,8 +741,8 @@ export const DualBarLoader = ({
   );
 };
 
-// 5. Enhanced Growing Bars with elastic animation
-export const GrowingBarLoader = ({
+// 15. Enhanced Growing Bars with elastic animation
+const GrowingBarLoader = ({
   height = defaultProps.size,
   barWidth = "6px",
   color = defaultProps.color,
@@ -338,6 +778,7 @@ export const GrowingBarLoader = ({
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "center",
+          width:"fit-content",
           height,
           padding: "4px 0",
         }}
@@ -364,8 +805,8 @@ export const GrowingBarLoader = ({
   );
 };
 
-// 6. Enhanced Waveform with realistic audio visualization
-export const WaveformBar = ({
+// 16. Enhanced Waveform with realistic audio visualization
+const WaveformBar = ({
   height = defaultProps.size,
   barWidth = "4px",
   color = defaultProps.color,
@@ -400,6 +841,7 @@ export const WaveformBar = ({
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "center",
+          width:"fit-content",
           height,
           padding: "4px 0",
           ...style,
@@ -438,9 +880,9 @@ export const WaveformBar = ({
 };
 
 // 7. NEW: Morphing Bar Loader
-export const MorphingBarLoader = ({
+const MorphingBarLoader = ({
   width = "100%",
-  height = defaultProps.barHeight,
+  height = defaultProps.size,
   color = defaultProps.color,
   className = "",
   style = {},
@@ -517,9 +959,9 @@ export const MorphingBarLoader = ({
 };
 
 // 8. NEW: Particle Trail Loader
-export const ParticleTrailLoader = ({
+const ParticleTrailLoader = ({
   width = "100%",
-  height = defaultProps.barHeight,
+  height = defaultProps.size,
   color = defaultProps.color,
   className = "",
   style = {},
@@ -587,4 +1029,25 @@ export const ParticleTrailLoader = ({
       </div>
     </>
   );
+};
+
+export {
+  PulsingBarsLoader,
+  RisingBarsLoader,
+  SlidingGradientBars,
+  MovingCenterBars,
+  AlternatingBarsLoader,
+  VerticalWaveBars,
+  SizeMorphingBars,
+  SequentialBarsLoader,
+  CrossPatternBars,
+  HorizontalStripesLoader,
+  BasicProgressBar,
+  StripedLoaderBar,
+  IndeterminateProgressBar,
+  DualBarLoader,
+  GrowingBarLoader,
+  WaveformBar,
+  MorphingBarLoader,
+  ParticleTrailLoader,
 };
