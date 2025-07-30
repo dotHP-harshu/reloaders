@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 
 // Common default props for all preloaders
 const defaultProps = {
-  size: "400px", // For overall container size where applicable
+  size: "64px", // For overall container size where applicable
   color: "#3498db",
   className: "",
   style: {},

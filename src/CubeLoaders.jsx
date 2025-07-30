@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 
 // Common default props for all CSS loaders
 const defaultLoaderProps = {
-  size: "30px", // Base size for the loader
+  size: "64px", // Base size for the loader
   color: "#3498db", // Primary color
   secondaryColor: "#666", // Secondary color
   accentColor: "#aaa", // Accent color

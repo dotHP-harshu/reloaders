@@ -1,3 +1,5 @@
+![Banner](./banner.jpg)
+
 # @dothp/reloaders
 
 **A lightweight collection of customizable React loading components**
@@ -54,7 +56,7 @@ All components support these basic props:
 |-----------|-----------------|------------|---------------------------------|
 | `size`    | string/number   | "64px"     | Width/height of loader          |
 | `color`   | string          | "#3498db"  | Primary color                   |
-| `speed`   | string          | "1s"       | Animation duration              |
+| `speed`   | string          | "fast"     | Animation speed              |
 | `style`   | object          | {}         | Additional CSS styles           |
 | `className` | string        | ""         | Custom class names              |
 

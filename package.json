@@ -8,6 +8,7 @@
   ],
   "exports": {
     "./package.json": "./package.json",
+    "./banner.jpg": "./banner.jpg",
     "./BarLoaders": "./dist/BarLoaders.js",
     "./CubeLoaders": "./dist/CubeLoaders.js",
     "./DotLoaders": "./dist/DotLoaders.js",

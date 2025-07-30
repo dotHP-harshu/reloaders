@@ -7,12 +7,21 @@ const defaultProps = {
   className: "",
   style: {},
   rounded: true,
-  speed: "1s",
+  speed: "normal",
 };
 
 let animationCounter = 0;
 const generateAnimationName = (prefix = "anim") =>
   `${prefix}-${animationCounter++}`;
+
+const getLoaderAnimationDuration = (speed) => {
+  const durations = {
+    slow: "1.5s",
+    normal: "1s",
+    fast: "0.5s",
+  };
+  return durations[speed] || durations.normal;
+};
 
 // 1. Pulsing Bars Loader
 const PulsingBarsLoader = ({
@@ -23,6 +32,7 @@ const PulsingBarsLoader = ({
   speed = defaultProps.speed
 }) => {
   const animationName = useMemo(() => generateAnimationName("pulse-bars"), []);
+  const animationDuration = getLoaderAnimationDuration(speed);
 
   return (
     <>
@@ -47,7 +57,7 @@ const PulsingBarsLoader = ({
             no-repeat linear-gradient(${color} 0 0) 50%  50%,
             no-repeat linear-gradient(${color} 0 0) 100% 50%`,
           backgroundSize: "20% 100%",
-          animation: `${animationName} ${speed} infinite linear`,
+          animation: `${animationName} ${animationDuration} infinite linear`,
           ...style,
         }}
         aria-label="Loading"
@@ -66,6 +76,7 @@ const RisingBarsLoader = ({
   speed = defaultProps.speed,
 }) => {
   const animationName = useMemo(() => generateAnimationName("rising-bars"), []);
+  const duration = getLoaderAnimationDuration(speed);
 
   return (
     <>
@@ -91,7 +102,7 @@ const RisingBarsLoader = ({
             no-repeat linear-gradient(${color} 0 0) 50%  100%,
             no-repeat linear-gradient(${color} 0 0) 100% 100%`,
           backgroundSize: "20% 100%",
-          animation: `${animationName} ${speed} infinite linear`,
+          animation: `${animationName} ${duration} infinite linear`,
           ...style,
         }}
         aria-label="Loading"
@@ -114,6 +125,9 @@ const SlidingGradientBars = ({
     []
   );
 
+  const duration = getLoaderAnimationDuration(speed);
+
+
   return (
     <>
       <style>
@@ -134,7 +148,7 @@ const SlidingGradientBars = ({
             linear-gradient(${color}00 calc(3*100%/6),${color} 0 calc(5*100%/6),${color}00 0) right  bottom`,
           backgroundSize: "20% 600%",
           backgroundRepeat: "no-repeat",
-          animation: `${animationName} ${speed} infinite linear`,
+          animation: `${animationName} ${duration} infinite linear`,
           ...style,
         }}
         aria-label="Loading"
@@ -156,6 +170,8 @@ const MovingCenterBars = ({
     () => generateAnimationName("moving-center"),
     []
   );
+  const duration = getLoaderAnimationDuration(speed);
+
 
   return (
     <>
@@ -179,7 +195,7 @@ const MovingCenterBars = ({
             no-repeat linear-gradient(${color} calc(50% - 10px),${color}00 0 calc(50% + 10px),${color} 0) 50%  100%,
             no-repeat linear-gradient(${color} calc(50% - 10px),${color}00 0 calc(50% + 10px),${color} 0) 100% 100%`,
           backgroundSize: "20% calc(200% + 20px)",
-          animation: `${animationName} ${speed} infinite linear`,
+          animation: `${animationName} ${duration} infinite linear`,
           ...style,
         }}
         aria-label="Loading"
@@ -201,6 +217,8 @@ const AlternatingBarsLoader = ({
     () => generateAnimationName("alternating-bars"),
     []
   );
+  const duration = getLoaderAnimationDuration(speed);
+
 
   return (
     <>
@@ -224,7 +242,7 @@ const AlternatingBarsLoader = ({
             no-repeat linear-gradient(${color} 0 0) 50%  100%,
             no-repeat linear-gradient(${color} 0 0) 100% 100%`,
           backgroundSize: "20% 65%",
-          animation: `${animationName} ${speed} infinite linear`,
+          animation: `${animationName} ${duration} infinite linear`,
           ...style,
         }}
         aria-label="Loading"
@@ -246,6 +264,8 @@ const VerticalWaveBars = ({
     () => generateAnimationName("vertical-wave"),
     []
   );
+  const duration = getLoaderAnimationDuration(speed);
+
 
   return (
     <>
@@ -269,7 +289,7 @@ const VerticalWaveBars = ({
             no-repeat linear-gradient(${color} 0 0) 50%  50%,
             no-repeat linear-gradient(${color} 0 0) 100% 50%`,
           backgroundSize: "20% 50%",
-          animation: `${animationName} ${speed} infinite linear`,
+          animation: `${animationName} ${duration} infinite linear`,
           ...style,
         }}
         aria-label="Loading"
@@ -288,6 +308,8 @@ const SizeMorphingBars = ({
   speed = defaultProps.speed,
 }) => {
   const animationName = useMemo(() => generateAnimationName("size-morph"), []);
+  const duration = getLoaderAnimationDuration(speed);
+
 
   return (
     <>
@@ -313,7 +335,7 @@ const SizeMorphingBars = ({
             no-repeat linear-gradient(${color} 0 0) 50%  50%,
             no-repeat linear-gradient(${color} 0 0) 100% 50%`,
           backgroundSize: "20% 50%",
-          animation: `${animationName} ${speed} infinite linear alternate`,
+          animation: `${animationName} ${duration} infinite linear alternate`,
           ...style,
         }}
         aria-label="Loading"
@@ -335,6 +357,8 @@ const SequentialBarsLoader = ({
     () => generateAnimationName("sequential-bars"),
     []
   );
+  const duration = getLoaderAnimationDuration(speed);
+
 
   return (
     <>
@@ -359,7 +383,7 @@ const SequentialBarsLoader = ({
             no-repeat linear-gradient(${color} 0 0) 50%  100%,
             no-repeat linear-gradient(${color} 0 0) 100% 100%`,
           backgroundSize: "20% 65%",
-          animation: `${animationName} ${speed} infinite linear`,
+          animation: `${animationName} ${duration} infinite linear`,
           ...style,
         }}
         aria-label="Loading"
@@ -381,6 +405,8 @@ const CrossPatternBars = ({
     () => generateAnimationName("cross-pattern"),
     []
   );
+    const duration = getLoaderAnimationDuration(speed);
+
 
   return (
     <>
@@ -402,7 +428,7 @@ const CrossPatternBars = ({
             no-repeat linear-gradient(${color} 0 0) 50%  50%,
             no-repeat linear-gradient(${color} 0 0) 100% 50%`,
           backgroundSize: "20% 60%",
-          animation: `${animationName} ${speed} infinite`,
+          animation: `${animationName} ${duration} infinite`,
           ...style,
         }}
         aria-label="Loading"
@@ -424,6 +450,8 @@ const HorizontalStripesLoader = ({
     () => generateAnimationName("horizontal-stripes"),
     []
   );
+  const duration = getLoaderAnimationDuration(speed);
+
 
   return (
     <>
@@ -445,7 +473,7 @@ const HorizontalStripesLoader = ({
             no-repeat repeating-linear-gradient(90deg,${color} 0 20%,${color}00 0 40%) 50% 0,
             no-repeat repeating-linear-gradient(90deg,${color} 0 20%,${color}00 0 40%) 50% 100%`,
           backgroundSize: "calc(500%/6) 50%",
-          animation: `${animationName} ${speed} infinite linear`,
+          animation: `${animationName} ${duration} infinite linear`,
           ...style,
         }}
         aria-label="Loading"
@@ -460,6 +488,7 @@ const BasicProgressBar = ({
   width = "100%",
   height = defaultProps.size,
   color = defaultProps.color,
+  speed = defaultProps.speed,
   className = "",
   style = {},
   rounded = true,
@@ -474,6 +503,8 @@ const BasicProgressBar = ({
     : color;
 
   const boxShadow = glow ? `0 0 10px ${color}40, 0 0 20px ${color}20` : "none";
+
+  const duration = getLoaderAnimationDuration(speed);
 
   return (
     <>
@@ -511,7 +542,7 @@ const BasicProgressBar = ({
           style={{
             height: "100%",
             background: backgroundColor,
-            animation: `${fillKey} 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite`,
+            animation: `${fillKey} ${duration } cubic-bezier(0.4, 0, 0.2, 1) infinite`,
             borderRadius: radius,
             boxShadow,
             willChange: "width, opacity",
